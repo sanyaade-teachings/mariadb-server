@@ -3385,8 +3385,10 @@ recv_init_crash_recovery_spaces(bool rescan, bool& missing_tablespace)
 			fil_names_dirty(rs.second.space);
 
 			/* Add the freed page ranges in the respective
-			tablespace */
-			if (!rs.second.freed_ranges.empty()
+			tablespace only if InnoDB doesn't need to
+			rescan the redo logs */
+			if (!rescan
+			    && !rs.second.freed_ranges.empty()
 			    && (srv_immediate_scrub_data_uncompressed
 				|| rs.second.space->is_compressed())) {
 
